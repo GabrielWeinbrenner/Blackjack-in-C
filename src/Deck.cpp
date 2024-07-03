@@ -20,6 +20,11 @@ Deck::Deck(int amountOfDecks, SDL_Renderer* renderer) {
             }
         }
     }
+    std::string cardPath = "resources/cards/back.png";
+    SDL_Surface* cardSurface = IMG_Load(cardPath.c_str());
+    this->back_texture = SDL_CreateTextureFromSurface(renderer, cardSurface);
+
+
     shuffleDeck();
 }
 
@@ -30,8 +35,9 @@ void Deck::shuffleDeck() {
 }
 
 
-Card Deck::dealCard() {
+Card Deck::dealCard(bool faceDown) {
     Card card = this->deck[0];
     this->deck.erase(this->deck.begin());
+    card.setFaceDown(faceDown);
     return card;
 }

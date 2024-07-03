@@ -20,9 +20,12 @@ public:
     void setTexture(SDL_Texture* texture);
     std::string getCardName();
 
+    bool getFaceDown() { return this->faceDown; }
+    void setFaceDown(bool faceDown) { this->faceDown = faceDown; }
 private:
     int value;
-    int isAce;
+    // int isAce;
+    bool faceDown;
     Suit suit;
     SDL_Texture* texture;
 };

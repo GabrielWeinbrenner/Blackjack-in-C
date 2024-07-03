@@ -1,6 +1,7 @@
 #include <Blackjack/Card.h>
 #include <string>
 #include <SDL2/SDL.h>
+#include <Blackjack/Deck.h>
 
 Card::Card(int value, Suit suit, SDL_Texture* texture) {
     this->value = value;   

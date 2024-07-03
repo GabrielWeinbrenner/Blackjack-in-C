@@ -8,6 +8,7 @@ Blackjack::Blackjack(SDL_Renderer* renderer) : deck(1, renderer) {
     playerHand.push_back(deck.dealCard());
     playerHand.push_back(deck.dealCard());
     dealerHand.push_back(deck.dealCard());
+    dealerHand.push_back(deck.dealCard(true));
 }
 
 void Blackjack::reset() {
@@ -16,6 +17,7 @@ void Blackjack::reset() {
     playerHand.push_back(deck.dealCard());
     playerHand.push_back(deck.dealCard());
     dealerHand.push_back(deck.dealCard());
+    dealerHand.push_back(deck.dealCard(true));
 } 
 
 void Blackjack::render(SDL_Renderer* renderer) {
@@ -31,7 +33,8 @@ void Blackjack::renderHand(std::vector<Card> hand, SDL_Renderer* renderer, int y
         dest.y = y;
         dest.w = 100;
         dest.h = 150;
-        SDL_RenderCopy(renderer, hand[i].getTexture(), NULL, &dest);
+        // 
+        SDL_RenderCopy(renderer, hand[i].getFaceDown() ? deck.back_texture : hand[i].getTexture(), NULL, &dest);
         x += 120;
     }
 }

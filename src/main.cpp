@@ -2,7 +2,9 @@
 #include <vector>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 #include <Button.h>
+#include <GameText.h>
 #include <Blackjack/Blackjack.h>
 
 // Constants
@@ -16,6 +18,12 @@ int main(int argc, char* argv[]) {
     // Initialize SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) != 0) {
         std::cerr << "Error initializing SDL: " << SDL_GetError() << std::endl;
+        return 1;
+    }
+    // Initialize SDL_ttf
+    if (TTF_Init() != 0) {
+        std::cerr << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
+        SDL_Quit();
         return 1;
     }
 
@@ -49,13 +57,37 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
+    // Create font
+    TTF_Font* font = TTF_OpenFont("resources/fonts/Minecraft.ttf", 24);
+    if (!font) {
+        std::cerr << "Error loading font: " << TTF_GetError() << std::endl;
+        SDL_DestroyRenderer(rend);
+        SDL_DestroyWindow(win);
+        IMG_Quit();
+        SDL_Quit();
+        return 1;
+    }
+
     // Initialize Blackjack game
     Blackjack blackjack(rend);
 
     // Create buttons
     std::vector<Button> buttons;
-    buttons.emplace_back(400, 400, 200, 100, SDL_Color{255, 0, 0, 255}, [&blackjack]() { blackjack.reset(); });
-    buttons.emplace_back(400, 250, 200, 100, SDL_Color{0, 255, 0, 255}, []() { std::cout << "Button 2 clicked!" << std::endl; });
+    GameText* resetText = new GameText(400, 400, "Reset", SDL_Color{255, 255, 255, 255}, font, rend);
+    if (!resetText) {
+        std::cerr << "Failed to create resetText GameText object" << std::endl;
+    }
+    buttons.emplace_back(resetText, 400, 400, 200, 100, SDL_Color{255, 0, 0, 255}, [&blackjack]() { blackjack.reset(); });
+
+    GameText* button2Text = new GameText(400, 250, "Button 2", SDL_Color{255, 255, 255, 255}, font, rend);
+    if (!button2Text) {
+        std::cerr << "Failed to create button2Text GameText object" << std::endl;
+    }
+    buttons.emplace_back(button2Text, 400, 250, 200, 100, SDL_Color{0, 255, 0, 255}, []() { std::cout << "Button 2 clicked!" << std::endl; });
+
+    // Create game text
+    std::vector<GameText> gameTexts;
+    gameTexts.emplace_back(400, 100, "Blackjack", SDL_Color{255, 255, 255, 255}, font, rend);
 
     // Event loop
     bool quit = false;
@@ -81,6 +113,11 @@ int main(int argc, char* argv[]) {
         // Render buttons
         for (auto& button : buttons) {
             button.render(rend);
+        }
+
+        // Render game texts
+        for (auto& gameText : gameTexts) {
+            gameText.render(rend);
         }
 
         // Update the window
