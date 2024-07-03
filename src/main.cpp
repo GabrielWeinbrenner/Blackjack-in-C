@@ -10,6 +10,7 @@
 // Constants
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
+TTF_Font* font = TTF_OpenFont("resources/fonts/Minecraft.ttf", 24);
 
 int main(int argc, char* argv[]) {
     // Seed random number generator
@@ -58,7 +59,8 @@ int main(int argc, char* argv[]) {
     }
 
     // Create font
-    TTF_Font* font = TTF_OpenFont("resources/fonts/Minecraft.ttf", 24);
+    font = TTF_OpenFont("resources/fonts/Minecraft.ttf", 24);
+
     if (!font) {
         std::cerr << "Error loading font: " << TTF_GetError() << std::endl;
         SDL_DestroyRenderer(rend);
@@ -73,21 +75,18 @@ int main(int argc, char* argv[]) {
 
     // Create buttons
     std::vector<Button> buttons;
-    GameText* resetText = new GameText(400, 400, "Reset", SDL_Color{255, 255, 255, 255}, font, rend);
-    if (!resetText) {
-        std::cerr << "Failed to create resetText GameText object" << std::endl;
-    }
-    buttons.emplace_back(resetText, 400, 400, 200, 100, SDL_Color{255, 0, 0, 255}, [&blackjack]() { blackjack.reset(); });
+    GameText* resetText = new GameText(400, 400, "Reset", SDL_Color{255, 255, 255, 255}, rend);
+    buttons.emplace_back(resetText, 400, 400, 100, 50, SDL_Color{255, 0, 0, 255}, [&blackjack]() { blackjack.reset(); });
 
-    GameText* button2Text = new GameText(400, 250, "Button 2", SDL_Color{255, 255, 255, 255}, font, rend);
-    if (!button2Text) {
-        std::cerr << "Failed to create button2Text GameText object" << std::endl;
-    }
-    buttons.emplace_back(button2Text, 400, 250, 200, 100, SDL_Color{0, 255, 0, 255}, []() { std::cout << "Button 2 clicked!" << std::endl; });
+    GameText* hitText = new GameText(400, 250, "Hit", SDL_Color{255, 255, 255, 255}, rend);
+    buttons.emplace_back(hitText, 400, 250, 100, 50, SDL_Color{0, 255, 0, 255}, [&blackjack]() { blackjack.hit(); });
+
+    GameText* standText = new GameText(400, 300, "Stand", SDL_Color{255, 255, 255, 255}, rend);
+    buttons.emplace_back(standText, 400, 300, 100, 50, SDL_Color{0, 0, 255, 255}, [&blackjack]() { blackjack.stand(); });
 
     // Create game text
     std::vector<GameText> gameTexts;
-    gameTexts.emplace_back(400, 100, "Blackjack", SDL_Color{255, 255, 255, 255}, font, rend);
+    gameTexts.emplace_back(400, 100, "Blackjack", SDL_Color{255, 255, 255, 255}, rend);
 
     // Event loop
     bool quit = false;
@@ -119,6 +118,7 @@ int main(int argc, char* argv[]) {
         for (auto& gameText : gameTexts) {
             gameText.render(rend);
         }
+
 
         // Update the window
         SDL_RenderPresent(rend);

@@ -3,8 +3,8 @@
 #include <SDL2/SDL.h>
 #include <Blackjack/Deck.h>
 
-Card::Card(int value, Suit suit, SDL_Texture* texture) {
-    this->value = value;   
+Card::Card(int cardIndex, Suit suit, SDL_Texture* texture) {
+    this->cardIndex = cardIndex;   
     this->suit = suit;
     this->texture = texture;
 }
@@ -18,7 +18,7 @@ const std::string getSuitString(Suit enumVal) {
 
 std::string Card::getCardName() {
     std::string faceString = "";
-    switch(this->value) {
+    switch(this->cardIndex) {
         case 11:
             faceString = "J";
             break;
@@ -32,13 +32,13 @@ std::string Card::getCardName() {
             faceString = "ACE";
             break;
         default:
-            faceString = std::to_string(this->value);
+            faceString = std::to_string(this->cardIndex);
             break;
     }
     return getSuitString(this->suit) + "_" + faceString;
 }
 
-SDL_Texture* Card::getTexture() {
+SDL_Texture* Card::getTexture() const {
     return this->texture;
 }
 void Card::setTexture(SDL_Texture* texture) {

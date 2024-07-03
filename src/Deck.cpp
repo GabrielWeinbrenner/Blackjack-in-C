@@ -15,6 +15,7 @@ Deck::Deck(int amountOfDecks, SDL_Renderer* renderer) {
                 std::string cardPath = "resources/cards/" + card.getCardName() + ".png";
                 SDL_Surface* cardSurface = IMG_Load(cardPath.c_str());
                 SDL_Texture* cardTexture = SDL_CreateTextureFromSurface(renderer, cardSurface);
+                // make the card smaller
                 card.setTexture(cardTexture);
                 this->deck.push_back(card);
             }
