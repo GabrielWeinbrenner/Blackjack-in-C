@@ -33,19 +33,28 @@ void Blackjack::hit() {
 
 void Blackjack::stand() {
     if (gameOver) return;
-    gameOver = true;
-    dealerPlay();
-    timerActive = true;
-    endTime = SDL_GetTicks() + 2000;
+    dealerPlaying = true;
+    
+    endTime = SDL_GetTicks() + 1000;
+    dealerEndTime = SDL_GetTicks() + 1000;
+
 
 }
 
 void Blackjack::dealerPlay() {
-    dealerHand[1].reveal(); // Reveal the dealer's face-down card
-    while (getHandValue(dealerHand) < 17) {
-        Uint32 delay = 1000;
+    if (!dealerPlaying) return;
+    dealerHand[1].setFaceDown(false);
+    Uint32 currentTime = SDL_GetTicks();
+    if (currentTime < dealerEndTime) return;
+
+    if (getHandValue(dealerHand) < 17) {
         dealerHand.push_back(deck.dealCard());
-        SDL_Delay(delay);
+        dealerEndTime = currentTime + 1000;
+    } else {
+        dealerPlaying = false;
+        gameOver = true;
+        timerActive = true;
+        endTime = SDL_GetTicks() + 2000;
     }
 }
 
@@ -76,16 +85,17 @@ void Blackjack::render(SDL_Renderer* renderer) {
 
     int playerHandValue = getHandValue(playerHand);
     int dealerHandValue = getHandValue(dealerHand);
-    GameText playerHandText(600, 400, "Player: " + std::to_string(playerHandValue), SDL_Color{255, 255, 255, 255}, renderer);
+    GameText playerHandText(300, 570, "Player: " + std::to_string(playerHandValue), SDL_Color{255, 255, 255, 255}, renderer);
     playerHandText.render(renderer);
-    GameText dealerHandText(600, 50, "Dealer: " + std::to_string(dealerHandValue), SDL_Color{255, 255, 255, 255}, renderer);
+    GameText dealerHandText(300, 220, "Dealer: " + std::to_string(dealerHandValue), SDL_Color{255, 255, 255, 255}, renderer);
     dealerHandText.render(renderer);
-    GameText resultText(600, 200, "", SDL_Color{255, 255, 255, 255}, renderer);
+    GameText resultText(300, 300, "", SDL_Color{255, 255, 255, 255}, renderer);
+
     if (gameOver) {
         if (playerHandValue > 21) {
-            resultText.setText("Player Busts! \nDealer Wins!", renderer);
+            resultText.setText("Player Busts! Dealer Wins!", renderer);
         } else if (dealerHandValue > 21) {
-            resultText.setText("Dealer Busts! \nPlayer Wins!", renderer);
+            resultText.setText("Dealer Busts! Player Wins!", renderer);
         } else if (playerHandValue > dealerHandValue) {
             resultText.setText("Player Wins!", renderer);
         } else if (playerHandValue < dealerHandValue) {
@@ -99,10 +109,11 @@ void Blackjack::render(SDL_Renderer* renderer) {
             reset();
         }
     }
+    dealerPlay();
 }
 
 void Blackjack::renderHand(const std::vector<Card>& hand, SDL_Renderer* renderer, int y) const {
-    int x = 350;
+    int x = 300;
     for (const auto& card : hand) {
         SDL_Rect dest = {x, y, 100, 150};
         SDL_RenderCopy(renderer, card.getFaceDown() ? deck.back_texture : card.getTexture(), NULL, &dest);

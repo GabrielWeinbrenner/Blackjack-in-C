@@ -75,19 +75,21 @@ int main(int argc, char* argv[]) {
 
     // Create buttons
     std::vector<Button> buttons;
-    GameText* resetText = new GameText(400, 400, "Reset", SDL_Color{255, 255, 255, 255}, rend);
-    buttons.emplace_back(resetText, 400, 400, 100, 50, SDL_Color{255, 0, 0, 255}, [&blackjack]() { blackjack.reset(); });
+    // GameText* resetText = new GameText(400, 400, "Reset", SDL_Color{255, 255, 255, 255}, rend);
+    // buttons.emplace_back(resetText, 400, 400, 100, 50, SDL_Color{255, 0, 0, 255}, [&blackjack]() { blackjack.reset(); });
 
-    GameText* hitText = new GameText(400, 250, "Hit", SDL_Color{255, 255, 255, 255}, rend);
-    buttons.emplace_back(hitText, 400, 250, 100, 50, SDL_Color{0, 255, 0, 255}, [&blackjack]() { blackjack.hit(); });
+    GameText* hitText = new GameText(700, 550, "Hit", SDL_Color{255, 255, 255, 255}, rend);
+    buttons.emplace_back(hitText, 650, 500, 100, 50, SDL_Color{128, 128, 128, 255}, [&blackjack]() { blackjack.hit(); });
 
-    GameText* standText = new GameText(400, 300, "Stand", SDL_Color{255, 255, 255, 255}, rend);
-    buttons.emplace_back(standText, 400, 300, 100, 50, SDL_Color{0, 0, 255, 255}, [&blackjack]() { blackjack.stand(); });
+    GameText* standText = new GameText(500, 550, "Stand", SDL_Color{255, 255, 255, 255}, rend);
+    buttons.emplace_back(standText, 530, 500, 100, 50, SDL_Color{128, 128, 128, 255}, [&blackjack]() { blackjack.stand(); });
 
     // Create game text
     std::vector<GameText> gameTexts;
-    gameTexts.emplace_back(400, 100, "Blackjack", SDL_Color{255, 255, 255, 255}, rend);
-
+    // gameTexts.emplace_back(400, 100, "Blackjack", SDL_Color{255, 255, 255, 255}, rend);
+    // GameText playerHandText(300, 570, "Player: " + std::to_string(playerHandValue), SDL_Color{255, 255, 255, 255}, rend);
+    // GameText dealerHandText(300, 220, "Dealer: " + std::to_string(dealerHandValue), SDL_Color{255, 255, 255, 255}, rend);
+    
     // Event loop
     bool quit = false;
     SDL_Event e;
@@ -103,7 +105,7 @@ int main(int argc, char* argv[]) {
         }
 
         // Clear the window
-        SDL_SetRenderDrawColor(rend, 0, 128, 0, 255);  // Green background
+        SDL_SetRenderDrawColor(rend, 53, 101, 77, 255);  // Green background
         SDL_RenderClear(rend);
 
         // Render game state

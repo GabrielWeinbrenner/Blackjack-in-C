@@ -15,6 +15,7 @@ public:
     void stand();
     void renderHand(const std::vector<Card>& hand, SDL_Renderer* renderer, int y) const;
     bool isGameOver() const;
+    
 
 private:
     Deck deck;
@@ -23,8 +24,12 @@ private:
     bool gameOver;
     void dealerPlay();
     int getHandValue(const std::vector<Card>& hand) const;
-    
+
     bool timerActive;
     Uint32 endTime;
+
+    bool dealerPlaying;
+    bool dealerTimer;
+    Uint32 dealerEndTime;
 };
 

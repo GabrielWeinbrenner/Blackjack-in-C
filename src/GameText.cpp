@@ -9,6 +9,7 @@ GameText::GameText(int x, int y, std::string text, SDL_Color color, SDL_Renderer
     rect.h = 0;
     TTF_Font* font = TTF_OpenFont("resources/fonts/Minecraft.ttf", 24);
     SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    if(text.empty()) return;
     if (surface == nullptr) {
         std::cerr << "TTF_RenderText_Solid error: " << TTF_GetError() << std::endl;
         return;
