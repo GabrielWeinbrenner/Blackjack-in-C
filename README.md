@@ -1,4 +1,4 @@
-# Blackjack in C++ 🎴🃏
+# Blackjack in C++ 🃏
 
 This project is a simple blackjack game implemented using SDL2, SDL2_image, and SDL2_ttf libraries. Test your luck and strategy against the dealer!
 ## Screenshots
